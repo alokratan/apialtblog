@@ -46,13 +46,10 @@ const ViewProfile = ({ isOpen, onClose, onLogout }) => {
   return (
     <div className="fixed  inset-0 flex items-center justify-center z-50">
       <div className="absolute inset-0 bg-black opacity-75"></div>
-
       {
         userData?._id ? (
-          
-      
-      <div className="bg-white flex flex-col justify-between items-center  px-5 w-1/3 h-1/2 fixed z-100 p-2 rounded-md ">
-        <div className="flex absolute top-5 left-3 ">
+          <div className="lg:w-2/6 md:w-3/4 sm:w-full w-4/5 position fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  py-8 px-5 bg-white shadow-lg rounded-md flex flex-col justify-center ">
+          <div className="flex absolute top-5 left-3 ">
           <button
             onClick={() => onClosefn()}
             className="mr-1 px-2 py-1 text-white text-xs font-semibold bg-slate-700 rounded-full hover:bg-gray-400"
@@ -76,7 +73,7 @@ const ViewProfile = ({ isOpen, onClose, onLogout }) => {
             {userData?.email}
           </h6>
         </div>
-        <div className=" w-full h-1  bg-slate-300 rounded-full"></div>
+        <div className=" w-full h-1 my-4  bg-slate-300 rounded-full"></div>
         <p className="text-xs mt-2 text-center font-semibold text-slate-500 italic">
           "{userData?.bio}"
         </p>
@@ -94,10 +91,8 @@ const ViewProfile = ({ isOpen, onClose, onLogout }) => {
             <p className="text-xs">Followers</p>
           </div>
         </div>
-      </div>
-      
-
-        ) :(
+      </div>      
+      ) :(
           <Wait/>
         )
       }

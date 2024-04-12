@@ -5,21 +5,25 @@ import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import { getuserdetails } from "../../apis/register";
 import { urlgetuserprofile, urlsss } from "../../apis/urls";
+import Wait from "./Wait";
 
 const Profile = () => {
   const [user, setUser] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const navi = useNavigate();
+  const [waiting,setWaiting]=useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!localStorage.getItem("accessToken")) {
         navi("/signin");
       } else {
-        toast.loading("Please Wait", { id: "1" });
+        // toast.loading("Please Wait", { id: "1" });
         const userpersonal = await getuserdetails();
+      
         console.log("all user data:", userpersonal);
-        toast.success(userpersonal.message, { id: "1" });
+        // toast.success(userpersonal.message, { id: "1" });
+        setWaiting(true);
         setUser(userpersonal.data);
       }
     };
@@ -49,13 +53,21 @@ const Profile = () => {
 
   return (
     <>
-      <Toaster />
+      {/* <Toaster /> */}
+    
+
       <div className="bg-[url('/public/createblog.jpg')] h-screen overflow-y-scroll bg-no-repeat bg-fixed  bg-center  bg-cover ">
         {/* <DeleteModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onLogout={handleLogout}
       /> */}
+
+
+
+{waiting?(
+        <>
+
         <div className="bg-slate-900 sticky top-0  flex justify-between px-8 items-center py-6 md:w-full">
           <Link to={"/"} className="flex bg-black p-3 rounded-md ">
             <svg
@@ -120,8 +132,13 @@ const Profile = () => {
             </div>
           </div>
         </div>
+        </>
+      ):(
+        <Wait/>
+      )}
       </div>
     </>
+   
   );
 };
 

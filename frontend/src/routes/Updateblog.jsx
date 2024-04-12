@@ -1,4 +1,4 @@
-import { Fragment, useRef, useEffect, useState } from "react";
+import { Fragment, useRef, useEffect, useState, useLayoutEffect, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
@@ -7,10 +7,18 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASEURL } from "../Burl";
 import { useFormik } from "formik";
-import { createblogfn } from "../apis/register";
+import { createblogfn, updateblogfn } from "../apis/register";
 import * as Yup from "yup";
 
-export default function Createblog({ postmodal, onClose }) {
+export default function Updateblog({data, updatemodal, onClose }) {
+
+  useLayoutEffect(() => {
+    // console.log("data:",data)
+      formik.setValues({
+        title: data.title,
+        description: data.content
+    })
+  },[data])
   const [open, setOpen] = useState(true);
 
   const validationSchema = Yup.object({
@@ -20,7 +28,7 @@ export default function Createblog({ postmodal, onClose }) {
   const formik = useFormik({
     initialValues: {
       title: "",
-      description: "",
+      description:"",
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -36,12 +44,16 @@ export default function Createblog({ postmodal, onClose }) {
   });
 
   const handleSubmit = async (e) => {
+    if(e.title==data.title && e.description==data.content){
+      toast.error("No changes found", { id: "1" });
+      return;
+    }
     try {
       toast.loading("Please Wait", { id: "1" });
-      const res = await createblogfn(e);
+      const res = await updateblogfn(e,data);
       console.log("sends", res?.statusCode);
       if (res.statusCode) {
-        toast.success("Blog Created Successfully", { id: "1" });
+        toast.success("Blog Updated Successfully", { id: "1" });
 
         setTimeout(() => {
           onClose();
@@ -58,7 +70,7 @@ export default function Createblog({ postmodal, onClose }) {
     }
   };
   return (
-    <Transition.Root show={postmodal} as={Fragment}>
+    <Transition.Root show={updatemodal} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-10"
@@ -80,7 +92,7 @@ export default function Createblog({ postmodal, onClose }) {
         <div className="lg:w-2/6 md:w-3/4 sm:w-full w-4/5 position fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mx-6 py-8 px-5 bg-white shadow-lg rounded-md flex flex-col justify-center ">
           <div className="sm:w-full">
             <h2 className="text-center bg-slate-100 py-2 rounded-md text-2xl font-bold leading-9 tracking-tight text-black">
-              CREATE BLOG
+              UPDATE BLOG
             </h2>
           </div>
           <div className="mt-10 sm:mx-auto sm:w-full ">
